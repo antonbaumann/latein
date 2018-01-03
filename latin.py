@@ -13,6 +13,26 @@ def pretty_print(lst):
         print()
 
 
+def get_vok_data_for_id(vok_id):
+    cur.execute("SELECT * FROM VOC WHERE vok_id = '" + vok_id + "'")
+    data = cur.fetchone()
+    return data
+
+
+def get_form(q):
+    d = dict()
+    cur.execute("SELECT * FROM FORM WHERE form LIKE '" + sys.argv[1] + "'")
+    data = cur.fetchall()
+    for e in data:
+        vok_id = e[1].decode('utf-8')
+        if vok_id in d:
+            d[vok_id].append(e[3])
+        else:
+            d[vok_id] = [e[3]]
+    return d
+
+
+
 home = os.path.expanduser("~")
 dir_path = home + '/latein'
 db_path = home + '/latein/dict.sqlite'
@@ -37,14 +57,33 @@ con.text_factory = bytes
 with con:
     
     cur = con.cursor()    
-    cur.execute("SELECT * FROM VOC WHERE key LIKE '" + sys.argv[1] + "%'")
-    data = cur.fetchall()
-    pretty_print(data)
-   
-    if len(data) == 0:
-        cur.execute("SELECT * FROM VOC WHERE key LIKE '%" + sys.argv[1] + "%'")
+    print()
+    d = get_form(sys.argv[1])
+    for k in d:
+        data = get_vok_data_for_id(k)
+        pretty_print([data])
+        print('  Formen:')
+        for form in d[k]:
+            f_list = form.decode('utf-8').split(', ')
+            for f in f_list:
+                print('    ', f)
+
+        print('\______________________________________________________________')
+        print()
+
+
+    if len(d) == 0:
+        cur.execute("SELECT * FROM VOC WHERE key LIKE '" + sys.argv[1] + "%'")
         data = cur.fetchall()
         pretty_print(data)
+    
+
+    # if len(data) == 0:
+    #     cur.execute("SELECT * FROM VOC WHERE key LIKE '%" + sys.argv[1] + "%'")
+    #     data = cur.fetchall()
+    #     pretty_print(data)
+
+
 
 
 
