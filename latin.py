@@ -40,13 +40,11 @@ with con:
     cur.execute("SELECT * FROM VOC WHERE key LIKE '" + sys.argv[1] + "%'")
     data = cur.fetchall()
     pretty_print(data)
-
-    if len(data) != 0:
-        print('----------------------------------------------------------------', '\n')
-    
-    cur.execute("SELECT * FROM VOC WHERE key LIKE '%" + sys.argv[1] + "%'")
-    data = cur.fetchall()
-    pretty_print(data)
+   
+    if len(data) == 0:
+        cur.execute("SELECT * FROM VOC WHERE key LIKE '%" + sys.argv[1] + "%'")
+        data = cur.fetchall()
+        pretty_print(data)
 
 
 
