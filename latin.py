@@ -32,7 +32,6 @@ def get_form(q):
     return d
 
 
-
 home = os.path.expanduser("~")
 dir_path = home + '/latein'
 db_path = home + '/latein/dict.sqlite'
@@ -77,13 +76,3 @@ with con:
         data = cur.fetchall()
         pretty_print(data)
     
-
-    # if len(data) == 0:
-    #     cur.execute("SELECT * FROM VOC WHERE key LIKE '%" + sys.argv[1] + "%'")
-    #     data = cur.fetchall()
-    #     pretty_print(data)
-
-
-
-
-
