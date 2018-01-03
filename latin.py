@@ -5,6 +5,14 @@ import sqlite3 as lite
 import sys
 import os
 
+def pretty_print(lst):
+    for entry in lst:
+        print(entry[2].decode('utf-8'))
+        for desc in entry[3].decode('utf-8').split('; '):
+            print('  ', desc)
+        print()
+
+
 home = os.path.expanduser("~")
 dir_path = home + '/latein'
 db_path = home + '/latein/dict.sqlite'
@@ -30,11 +38,15 @@ with con:
     
     cur = con.cursor()    
     cur.execute("SELECT * FROM VOC WHERE key LIKE '" + sys.argv[1] + "%'")
-    
     data = cur.fetchall()
+    pretty_print(data)
+
+    if len(data) != 0:
+        print('----------------------------------------------------------------', '\n')
     
-    for entry in data:
-    	print(entry[2].decode('utf-8'))
-    	for desc in entry[3].decode('utf-8').split('; '):
-    		print('  ', desc)
-    	print()
+    cur.execute("SELECT * FROM VOC WHERE key LIKE '%" + sys.argv[1] + "%'")
+    data = cur.fetchall()
+    pretty_print(data)
+
+
+
